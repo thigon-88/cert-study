@@ -1,0 +1,9 @@
+/**
+ * 
+ */
+/**
+ * @author thimo
+ *
+ */
+module CertificationStudy {
+}
