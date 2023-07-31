@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author thimo
- *
- */
-module CertificationStudy {
-}
