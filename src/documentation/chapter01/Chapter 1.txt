@@ -1,0 +1,65 @@
+Classes: can be defined as building blocks. There are others, as interfaces, records and enums.
+Fields and methods: the primary elements of a class. They can be called members of a class.
+Comments: helps with the readability of the code. We can use 3 types: single-line, multiple-line and the Javadoc one.
+
+Main method = allows JVM to call and execute our code.
+
+Commands:
+javac: used to compile java classes and transform them into bytecode. We need to inform the file and the .java extension.
+java: used to execute the compiled .class file. We must inform just the name of the file without the .class extension.
+To be executed, the class must have a valid main() method.
+A shortcut for both commands is java Zoo.java Zoo Bronks, where Zoo and Bronks are arguments. It's used when your program is only
+one file.
+
+Imports:
+-we can use wildcards (*) to import all classes in the package (it doesn't bring child packages, fields or methods).
+-java.lang package is always imported implicitly. So you can type, but you don't have to.
+-if a class can be found in multiple packages, Java gives you a compile error. To solve it, we must remove one of the imports
+or we must explicitly import a class name. This way, it takes precedence over any wildcard present.
+-if both classes with the same name are needed, we must use it with fully qualified class name (with full package and class name).
+
+Compile
+-we can use wildcards (*) to compile all java files in a directory. I.E.: javac packagea/*.java
+It just works for files, not directories.
+-by default, when you compile a java file, the compiled classes are placed in the same directory. To
+put them in a different directory, you can inform the option -d. I.E.: javac -d classes packagea/ClassA.java , where the compiled classes are going to be placed in classes/packagea
+-to run the program, we must specify the classpath so Java knows where to find the classes. We can use the option -cp, -classpath or --class-path. I.E.: java -cp classes packagea.ClassA
+-we can use the classpath option to specify the location of files explicitly. This is useful when the class files are located elsewhere or in special JAR files. I.E.: java -cp ".;C:\temp\someOtherLocation;c:\temp\myJar.jar" myPackage.MyClass
+The period (.) indicates you want to include the current directory in the classpath
+
+Creating a JAR file:
+jar -cvf myNewFile.jar .
+jar --create --verbose --file myNewFile.jar .
+jar -cvf myNewFile.jar -C dir . (-C: specify directory containing files to be used to create the JAR)
+
+Ordering elements in a class:
+1) package declaration
+2) imports statement
+3) top-level type declaration
+4) field declarations
+5) method declarations
+
+Following the order of the initialization
+-Fields and instance initializer blocks are run in the order in whic they appear in the file;
+-The constructor runs after all fields and instance intializer blocks have run;
+-You can't refer to a variable before it has been defined;
+
+Data Types
+-Primitives: boolean, byte, short, int, long, float, double, char;
+-When a number is present in the code, it's called literal.
+-You can change the "base" when writing numbers. Examples would be binary, octal and hexadecimal (hexadecimal is case insensitive);
+-You can have underscore in numbers to make them easier to read, it just can't be used at the beginning, at the end and with the decimal point;
+-Wrapper classes (Boolean, Byte, Integer and so on) extend the Number class;
+
+Defining Text blocks
+-we can use the escape characters because backslash provides a special meaning in text, but it's harder to read;
+-Text blocks (or multiline strings) are better. We define like this: """ (to start the text block) and """ (to end it). All identation and spaces are considered (if it's not at the end of line);
+-Text blocks require a line break after the opening """.
+-The \ omits the new line in the block. When it comes followed by other things as ", it's printed out;
+
+Declaring variables
+-An identifier is the name of a variable, method, class, interface or package;
+-Identifiers must begin with a letter, a currency symbol or a _ symbol;
+-Identifiers cam include numbers, but not start with them;
+-A single underscore is not allowed as an identifier;
+-You cannot use the same name as a Java reserved word;
