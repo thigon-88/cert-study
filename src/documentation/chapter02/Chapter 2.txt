@@ -1,0 +1,119 @@
+Operators - page 66
+
+Understanding Java Operators
+There are three types of operators: unary, binary and ternary.
+Java operators are not necessarily evaluated from left-to-right. It depends on the precedence. Java follows the rules
+for mathematics.
+The assignment operator (=) has the lowest precedence, so the assignment to a variable is performed last.
+Table with operator precedence in this chapter folder.
+The arrow oeprator (->), also called the arrow function or lambda operator, is a binary operator that represents a relationship
+between two operands.
+
+Unary operator
+They perform simple tasks, such as increasing a numeric variable by one or negating a boolean value.
+
+Bitwise complement operator (~): flips all the 0s and 1s in a number. I.E.: int value = 3; //0011
+int complement = ~value; // = -4 (1100).
+To facilitate, we just need to remember this rule: to find the bitwise complement of a number, multiply it  by negative one
+and then subtract one.
+
+Negation operator: reverses the sign of a numeric expression.
+Remember: you cannot apply the negation operator (-) to a boolean expression, nor apply a logical complement operator (!) to a
+numeric expression.
+
+Numeric promotion
+-If two values have different data types, Java will automatically promote one of the values to the larger of the two data types.
+-If one of the values is integral and the other is floating-point, Java will promote the integral value to the floating-point
+one.
+-smaller data types as byte, short and char are first promoted to int any time they're used with a Java binary arithmetic
+operator with a variable (as opposed to a value), even if neither of the operands is int;
+-After all promotion has occurred and the operands have the same data type, the resulting value will have the same data type as
+its promoted operands.
+
+Assigning values
+-An assignment operator (=) is a binary operator that modifies, or assign, the variable on the left side of the operator with the
+result of the value on the right side of the equation. It is evaluated from right to left.
+-Java will automatically promote from smaller to larger data types, but it won't compile if we try to do the opposite without
+casting.
+
+Casting Values
+-Casting is a unary operation where one data type is explicitly interpreted as another data type.
+-Casting is optional and unnecessary when converting to a larger or widening data type, but it is required when converting
+to a smaller or narrowing data type. I.E.: short tail = (short) (4 + 10);
+-Spaces between the cast and the value are optional;
+-Not covered by the exam: depending on the type of casting we try to do, the system may have to deal with overflow and underflow.
+Overflow is when a number is so large that it will no longer fit within the data type, so the system "wraps around" to the
+lowest negative value and counts up from there, similar to how modulus arithmetic works. There's also an analogous underflow.
+Example in the class.
+-When dealing with variables, in an arithmetic operation it will e promoted to int.
+-When dealing with values, the compiler has enough information to check if the result of the operation would in an overflow
+of the chosen data type.
+
+Compound Assignment Operators
+-These operators are: +=, -=, *= and /= and I.E.: a += 5 is the same as a = a + 5;
+-If in our operation we have a bigger type as part of the operation and the assignment in a smaller data type, in normal
+operation it would give a compiler error, but with the compound operator it will first cast the variable to a bigger data
+type, apply the arithmetic operation and then cast the result to the destined variable data type;
+
+Equality operators
+-The equality operator (==) returns true if two values represent the same value and for objects if the two values reference
+the same object;
+-The inequality operator (!=) returns true if two values represent different values and for objects if the two values not
+reference the same object;
+-we can't mix data types (as boolean and int, for example);
+-if we compare two reference data type with null value, it will return true (null == null);
+
+Relational operators
+-the ones we need to know for the exam: less than (<), less than or equal to (<=), greater than (>), greater than or equal to
+(>=) and type comparison (instanceof);
+-The first four relational operators apply only to numeric values. If the two numeric operands are not of the same data type,
+the smaller one is promoted, as previously discussed;
+-Not covered in the exam: instanceof can be used with other high-level types, such as records, enums and annotations, other than
+classes and interfaces.
+-if the compiler can determine a variable cannot possibly be cast to a specific class, it reports and error
+(time instanceof String).
+-any comparison (instanceof) with null literal or null reference will always return false;
+-if we use null in the right side of instanceof it doesn't compile (obj instanceof null);
+
+Logical Operators
+-The operators are (&), (|) and (^) and they may be applied to both numeric and boolean data types;
+-When applied to boolean data types, they are referred to as logical operators;
+-When applied to numeric data types, they are referred to as bitwise operators, as they perform bitwise comparisons of the bits
+that compose the number;
+-Logical AND (&): both values must be true to return true from the comparison;
+-Logical inclusive OR (|): return value is true if at least one of the values is true;
+-Logical exclusive OR (^): return value is true if one value is true and the other is false;
+
+Conditional operators
+-Represented by (&&) and (||), also called short-circuit operators;
+-Conditional AND (&&): value is true if both values are true;
+-Conditional OR (||): value is true if at least one of the values is true;
+-Can help to avoid NullPointerException if used in the check;
+
+Ternary operator
+-Conditional operator composed by (?) and (:);
+-It has the following form: booleanExpression ? expression1 : expression2;
+-It's a condensed form of a combined if and else statement that returns a value;
+
+Exercises:
+1) A, D,
+2) A, B, D, E
+3) C, D, F
+4) B
+5) E
+6) F
+7) C
+8) E
+9) D, E, A
+10) C, F, B
+11) D
+12) D
+13) F
+14) B, E, G
+15) C, D, F
+16) D
+17) C, F
+18) C
+19) B, F
+20) D, E,
+21) E

@@ -1,3 +1,5 @@
+Building Blocks - page 2
+
 Classes: can be defined as building blocks. There are others, as interfaces, records and enums.
 Fields and methods: the primary elements of a class. They can be called members of a class.
 Comments: helps with the readability of the code. We can use 3 types: single-line, multiple-line and the Javadoc one.
@@ -63,3 +65,38 @@ Declaring variables
 -Identifiers cam include numbers, but not start with them;
 -A single underscore is not allowed as an identifier;
 -You cannot use the same name as a Java reserved word;
+-variables declared in a single line share the same type and declaration;
+
+Initializing variables
+-variables with final keyword cannot be modified;
+-code will not compile if in a method you try to initialize a variable inside an if block (as it's possible to have true or false as a result of the condition).
+-Instance and class variables receive a default value as soon as they are declared.
+-we can use local variable type inference using the keyword var instead of the primitive or reference type. This feature only works in local variables;
+-a var variable must be declared and initialized in a single line;
+-a var variable cannot be initialized with null because this could be from any reference type;
+-var is not a reserved word, so you can name classes, packages and even variables with it.
+
+Exercises
+1- D, E
+2- C, D, E
+3- A, E,
+4- B, E, G
+5- A, D, F
+6- F
+7- F
+8- B, D, G, H
+9- C, E,
+10- A,C, E, F, G
+11- E
+12- A, C, D
+13- A
+14- A, B, D, E,
+15- C, F,
+16- A, D,
+17- D, F, G
+18- B, F,
+19- A, D, E
+20- C
+21- D
+22- C, G
+23- A,
