@@ -1,0 +1,29 @@
+Making Decision - page 101
+
+The decision-making statement (if) can be single statement or block of statements (between {}).
+It only executes a particular block of code if and only if a boolean expression evaluates to true at runtime.
+
+Pattern Matching
+Pattern matching is a technique of controlling program flow that only executes a section of code that meets certain criteria.
+It's used with if statement and instanceof operator. Examples in the code part. The converted variable is called pattern variable.
+It's a bad practice to reassign a pattern variable because it can lead to ambiguity about what is and is not in scope.
+Pattern matching includes expressions that can be usd to filter data out.
+The type of pattern variable must be a subtype on the left side of the expression. This rule doesn't exist for traditional instanceof
+operator expressions, though.
+
+Flow Scoping
+The compiler applies flow scoping when working with Pattern Matching. Flow scoping means the variable is only in scope when the compiler
+can definitely determine its type.
+Flow scoping is unlike any other kind of scoping in that it is not strictly hierarchical like instance, class, or local scoping.
+
+Switch statements
+Almost everything in switch statement is optional, as case, break, default.
+Data types accepted: int, byte, short, char (and their associated wrapper classes (Integer, Byte, Short, Character), String, enum
+values and var (if the type resolves to one of the preceding types).
+For a case value be valid, we must consider some rules: variables must be marked with a final modifier and be initialized with a
+literal value in the same expression; methods can't be used because you can't have a cause statement value that requires executing a
+method at runtime; arithmetical operations with literals are permitted.
+
+Switch Expression
+It's a compact version of a switch statement, capable of returning a value.
+It supports two types of branches: an expression and a block.

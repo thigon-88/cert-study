@@ -77,26 +77,26 @@ Initializing variables
 -var is not a reserved word, so you can name classes, packages and even variables with it.
 
 Exercises
-1- D, E
-2- C, D, E
-3- A, E,
-4- B, E, G
-5- A, D, F
-6- F
-7- F
-8- B, D, G, H
+1- D, E (R)
+2- C, D, E (R)
+3- A, E, (R)
+4- B, E, G (R)
+5- A, D, F (R)
+6- F (R)
+7- F (W)
+8- B, D, G, H (W)
 9- C, E,
 10- A,C, E, F, G
-11- E
-12- A, C, D
+11- E (R)
+12- A, C, D (R)
 13- A
-14- A, B, D, E,
+14- A, B, D, E, (R)
 15- C, F,
-16- A, D,
-17- D, F, G
+16- A, D, (R)
+17- D, F, G (R)
 18- B, F,
 19- A, D, E
-20- C
-21- D
+20- C (R)
+21- D (R)
 22- C, G
 23- A,

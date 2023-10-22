@@ -99,21 +99,21 @@ Exercises:
 1) A, D,
 2) A, B, D, E
 3) C, D, F
-4) B
+4) B (R)
 5) E
-6) F
+6) F (R)
 7) C
 8) E
-9) D, E, A
+9) D, E,  (R)
 10) C, F, B
-11) D
-12) D
-13) F
-14) B, E, G
+11) D (R)
+12) D (R)
+13) F (R)
+14) B, E, G (R)
 15) C, D, F
 16) D
-17) C, F
-18) C
-19) B, F
+17) C, F (R)
+18) C (R)
+19) B, F (R)
 20) D, E,
-21) E
+21) E (R)
