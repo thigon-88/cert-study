@@ -23,7 +23,98 @@ values and var (if the type resolves to one of the preceding types).
 For a case value be valid, we must consider some rules: variables must be marked with a final modifier and be initialized with a
 literal value in the same expression; methods can't be used because you can't have a cause statement value that requires executing a
 method at runtime; arithmetical operations with literals are permitted.
+We can combine constant expression in cases using commas.
 
 Switch Expression
-It's a compact version of a switch statement, capable of returning a value.
+It's a compact version of a switch statement, capable of returning a value. It was added to Java 14.
 It supports two types of branches: an expression and a block.
+To return values, if we use arrow operator (->) in case expression, we just need the value. We can also use curly braces with arrow
+operator, but we must add the word 'yield' to return the value.
+Although most of the times switch expression returns a value, we can use it without assigning the return.
+All the branches of a switch expression that do not throw an exception must return a consistent data type (if the switch expression
+returns a value).
+A default branch is required unless all cases are covered or no value is returned.
+You can't return incompatible data types.
+Yield statements are not optional in switch expression if it returns a value.
+We must use semicolon in switch expressions in case expressions, at the end of switch expressions, but cannot be used with case blocks.
+Good to know: Java 17 also supports Pattern Matching in switch expressions, but since this is a preview feature, it is not in scope
+for the exam.
+A switch expression that returns a value must handle all possible input values. When it does not return a value, it is optional.
+It can handle all possible values by adding a default branch or by adding a case branch for every possible value (in case it's an
+enum value).
+The maximum amount of possible values in a switch expression is 256.
+
+The while statement
+It's similar to an if statement, in which it is composed of a boolean expression and a statement, or a block of statement. During
+execution, the boolean expression is evaluated before each interaction of the loop and exits if the evaluation returns false.
+
+The do/while statement
+Unlike while loop, a do/while loop guarantees that the statement or block will be executed at least once.
+
+Infinite loops with while
+Having infinite loops can lead to numerous problems in practice, including overflow exceptions, memory leaks, slow performance
+and even bad data.
+
+The for loop
+A basic for loop is composed of an initialization block, a conditional boolean expression and an update statement. Each of these
+statements are separated by a semicolon. In addition, the initialization and update sections may contain multiple statements, separated
+by commas.
+The variables in the initialization block must all be of the same type.
+It's considered a poor coding prctice to modify loop variables due to the unpredictability of the result.
+
+Infinite loop with for
+Even though this doesn't seem to compile, it does and run without issue. It's actually an infinite loop: for( ; ; )
+This reinforces that the components of the for loop are each optional (but the semicolons separating the three sections are required).
+
+The for-each (or enhanced for) loop
+It's a specialized structure designed to iterate over arrays and various Collection Framework classes (whose implement
+java.lang.Iterable, such as List or Set).
+
+Adding Optional Label
+A label is a single identifier that is followed by a collon. We can label if statements, switch statements, blocks and loops.
+For readability, they are commonly expressed using uppercase letters in snake_case with underscores between words.
+It's extremely useful in nested structures.
+A break statement can take an optional label parameter. Without a label parameter, the break statement will terminate the nearest
+inner loop it is currently in the process of executing. The optional label allows us to break out of a higher-level outer loop.
+
+The continue statement
+It's a statement that causes the flow to finish the execution of the current loop interaction.
+
+The return statement
+It can be used as an alternative to using labels and break statements to exit loops quickly and can lead to more readable code in
+practice.
+
+Unreachable code
+Any code placed after continue, break and return is considered unreachable and will not compile.
+
+
+Review Questions
+1- A, B, C, E, F, G
+2- B
+3- A, D, F, H
+4- F
+5- E
+6- C, D, E,
+7- B
+8- F
+9- B, D, E, F
+10- C
+11- C
+12- C
+13- G
+14- B, D, F
+15- F
+16- A, B, D,
+17- B, E
+18- C, E, F
+19- E
+20- A, E
+21- D
+22- E
+23- F
+24- G
+25- D
+26- F
+27- A
+28- B
+29- C
