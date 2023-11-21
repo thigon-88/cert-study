@@ -1,0 +1,61 @@
+Core APIs - page 155
+
+Creating and manipulating Strings
+We can instantiate String using the keyword new, declaring it straight away and using text blocks (""").
+String implements the interface CharSequence.
+Using the plus sign (+) in String means concatenation. The expression is evaluated from left to right.
+It's immutable.
+Important methods: length(), charAt(int), indexOf(obj), substring(int), toUpperCase(), toLowerCase(), equals(obj), isEmpty(),
+isBlank(),
+equalsIgnoreCase(String),
+-The methods toString(), equals(Object) and hashcode() provide a default implementation in Object, but if we want to make intelligent
+use of them, we should override them.
+-We can look for substrings using the following methods: startsWith(String), endsWith(String) and contains(CharSequence).
+-We can replace values along the String using the method replace(CharSequence old, CharSequence new).
+-Whitespaces can be removed using the methods trim() and strp(). They both do the same thing, the difference is that strip()
+supports Unicode. Whitespaces consist of spaces along with \t (tab), \n (newline) and \r (carriage return). We can also choose if we
+want to remove whitespaces from the beginning specifically or at the end with the methods stripLeading() and stripTrailing().
+-Now that Java supports Text blocks, we have some useful methods to work with indentation, such as indent(int) and stripIndent().
+They also do other things. First, a line break will be added to the end of the String if not already there. Second, any line breaks
+are converted to the \n format. The method stripIndent() is useful if a String was built with concatenation rather than using a text
+block. It does almost everything that indent(int) does, but it does not add a trailing line break if it is missing.
+The stripIndent() follows the same format pattern for every line. It won't remove 2 whitespaces in a line if the rest just have a space
+in it.
+-When we escape characters, we use a single backslash (\), as we said previously about tab (\t). If we don't want this behavior, we
+must add an extra backslash to escape the backslash, so the \\t is the literal string \t. If we want to take this literal and turn it into
+equivalent escaped character, we must use the translateEscapes() method.
+-It's possible to format string using the methods static format(objs) and formatted(objs). Some common formating symbols: %s
+(applies to any type, commonly String values), %d (applies to integer values like int and long), %f (applies to floating-point values
+like float and double, %s (inserts a line break). If the wrong type is used, an exception will be thrown.
+By default, %f displays exactly 6 digits past the decimal. If we want to display only 1, we can use %.1f
+We can also specify the total length of output (including comma) by using a number before the decimal symbol (%12f). We can inform for the part in which
+we don't have numbers to be filled with 0 instead of spaces (%012f), and there are more resources available.
+-We can use a technique called method chaining, in which we chain various methods into each other (I.E.: "string".trim().toUpperCase()).
+To evaluate it, we must start at the left, call the first method, get the result and call the second, until we get to the semicolon.
+
+StringBuilder
+StringBuilder, unlike String, is not immutable.
+StringBuilder and StringBuffer work the same way, except StringBuilder support threads. So, if you need to use, use StringBuilder
+because it performs faster.
+-We can only create a StringBuilder using the reserved word new.
+-Common methods: substring(int), indexOf(String), length(), chatAt(int), append(String), insert(int, String), delete(int, int),
+deleteChatAt(int), replace(), reverse(),
+-If you try to delete using the end index beyond the end, Java will assume you meant the end and will not throw any exception.
+-The StringBuilder class doesn't implement equals().
+
+The String Pool
+-Java reuses common strings that repeat in the program. This place were the strings created are located is also called the String pool.
+-We have strings reused if they are literals. If the value is computed runtime, a new String object is created.
+-We can use the method intern() to tell Java to use the string pool (I.E.: new String("test").intern()).
+
+Understanding Arrays
+When instantiating an array, you can type the [] before or after the name, and adding space is optional.
+-Ways of instantiating an array:
+int[] numbers = new int[3]; //empty
+int[] numbers = new int[] {42, 55, 99}; //initialized
+int[] numbers = {42, 55, 99}; //shortcut, also called anonymous array
+int ids1[], types1; //it's possible to declare two variables of different types (one is int and the other is an array).
+-Using toString() in arrays print the hashcode of it. A better way to do it is to use Arrays.toString(array).
+-The array does not allocate space for the objects, but for the reference to where the objects are really stored.
+-We can get ArrayStoreException if we store in an array a type that is not supported, but it was valid during compile time.
+-To see how many elements an array has we can use the property length. Remember that length() only works for String.
