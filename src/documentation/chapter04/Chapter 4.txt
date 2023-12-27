@@ -12,7 +12,7 @@ equalsIgnoreCase(String),
 use of them, we should override them.
 -We can look for substrings using the following methods: startsWith(String), endsWith(String) and contains(CharSequence).
 -We can replace values along the String using the method replace(CharSequence old, CharSequence new).
--Whitespaces can be removed using the methods trim() and strp(). They both do the same thing, the difference is that strip()
+-Whitespaces can be removed using the methods trim() and strip(). They both do the same thing, the difference is that strip()
 supports Unicode. Whitespaces consist of spaces along with \t (tab), \n (newline) and \r (carriage return). We can also choose if we
 want to remove whitespaces from the beginning specifically or at the end with the methods stripLeading() and stripTrailing().
 -Now that Java supports Text blocks, we have some useful methods to work with indentation, such as indent(int) and stripIndent().
@@ -59,3 +59,80 @@ int ids1[], types1; //it's possible to declare two variables of different types 
 -The array does not allocate space for the objects, but for the reference to where the objects are really stored.
 -We can get ArrayStoreException if we store in an array a type that is not supported, but it was valid during compile time.
 -To see how many elements an array has we can use the property length. Remember that length() only works for String.
+-We can sort arrays through Arrays.sort().
+-If we print an array, it'll show only the object hash. To see the elements, use Arrays.toString(array).
+-There's a way to search elements in array, but it must be sorted. Method: Arrays.binarySearch(array, element). If it's not sorted,
+the result is undefined.
+-We can compare arrays to know which one is "smaller" (length) using the method Arrays.compare(array1, array2). If they have the same
+length, the amount of elements in each index is considered and after it, the value of the elements. Rules for comparison:
+    -null is smaller than any other value;
+    -for numbers, normal numeric order applies;
+    -for strings, one is smaller if it is a prefix of another;
+    -for strings/characters, numbers are smaller than letters;
+    -for strings/characters, uppercase is smaller than lowercase;
+-To find the index of an element in two arrays that differ, we can use the method Arrays.mismatch(array1, array2).
+-Varargs are treated like arrays in Java (int... args).
+
+Working with multidimensional arrays
+Arrays are objects, and considering they can store objects, arrays can store other arrays.
+Multiple arrays separator are all it takes to declare arrays with multiple dimensions.
+We can have bidimensional array in rectangular shape (with the second length index fixed for all the first array index), but it doesn't
+need to be. We can define different length for each array inside (new int[4][];)
+
+Calculating with Math API
+All methods are static.
+Some methods:
+    -double min(double a, double b); Can be used with such types (parameters and return): float, int and long.
+    -double max(double a, double b); Return and parameters are similar to min().
+Rounding numbers: method round(double); If the fractional part is .5 or higher, the number is rounded up.
+Method ceil(double): if it's a whole number, it returns the same value. If it has any fractional value, it rounds up to the next
+whole number.
+Method floor(double): it discards any value after the decimal.
+Calculating exponents: double pow(double number, double exponent);
+Random numbers: double random(). Random numbers can be generated with Random class (java.util).
+
+Working with dates and times
+Day vs date: the words date and day are often used as synonyms. Be alert to this on the exam.
+Package of dates and times API: java.time.*;
+The exam gives you four choices to decide how much information you need:
+    -LocalDate: contains just a date (no time and no time zone);
+    -LocalTime: contains just a time (no date and no time zone);
+    -LocalDateTime: contains both date and time, but no time zone;
+    -ZonedDateTime: contains a date, time and time zone.
+Each of these four classes has a static method called now(), which gives the current date and time.
+The time zone offset can be listed in different ways: +02:00, GMT+2, and UTC+2 all mean the same thing.
+The ZonedDateTime creation methods (of()) are the only one without Month enum.
+The date and time classes have private constructors along with static methods that return instances.
+
+Manipulating dates and times
+The date and time classes are immutable. Remember to assign the results of these methods to a reference variable, so they are not
+lost.
+February 29th exists only in a leap year. Leap years are years that are multiple of 4 or 400, but not multiples of 100.
+Period class: gives us flexibility to work with intervals. This allows us to reuse something that will be functioning for different
+periods of time. To create it: Period.of(int, int, int), Period.ofYears(int), Period.ofMonths(int), Period.ofWeeks(int),
+Period.ofDays(int).
+We cannot chain methods when creating a Period.
+Period is a day or more of time.
+Output example: P1Y2M3D
+
+Working with Durations
+Durations stands for smaller units of time. We could pass 365 days to represent a year, but we shouldn't, as that's what Period is
+for.
+A Duration is stored in hours, minutes and seconds. To create it: Duration.ofDays(int), Duration.ofHours(int),
+Duration.ofMinutes(int), Duration.ofSeconds(int), Duration.ofMillis(int), Duration.ofNanos(int) and Duration.of(int, TemporalUnit).
+The implementation of TemporalUnit interface is named ChronoUnit (java.util.temporal).
+Duration doesn't have a factory method that takes multiple units like Period does.
+To know the interval using ChronoUnit: ChronoUnit.HOURS.between(Temporal, Temporal), where Temporal could be LocalDate, LocalTime,
+and so on.
+We can truncate any object with a time element. If we use time.truncatedTo(ChronoUnit.MINUTES), it zeroes any field smaller than
+minutes.
+
+Working with Instants
+Instant represents a specific moment in time in the GMT time zone.
+
+Daylight Saving Time (horário de verão)
+The act of moving the clock forward or back occurs at 2:00 a.m., which falls every Sunday morning. If the time is going to advance
+1 hour, Java knows that the time between 2:00 a.m. and 2:59 a.m. doesn't exist and it switches over to the appropriate GMT offset.
+
+Review Questions
+1- 
