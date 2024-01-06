@@ -1,0 +1,121 @@
+Methods - page 220
+
+Method signature: it's defined by two parts, the method name and the parameter list. It doesn't include return type and access
+modifiers.
+
+Optional specifiers:
+-static, abstract, final, default, syncronized, native, strictfp.
+Native: used when interacting with code written in another language, such as C++.
+Strictfp: used for restricting floating-point calculations and ensuring the same result on every platform (portable).
+They are optional, but they must all appear before the return type.
+Access modifiers and optional specifiers can be listed in any order, but once the return type is specified, the rest of the parts of
+the method are written in a specific order: name, parameter list, exception list, body.
+
+Method name
+An identifier may only contain letters, numbers, currency symbols or _. The first character is not allowed to be a number and reserved
+words are not allowed. Finally, the single underscore character is not allowed.
+
+Method signature
+It's composed of the method name and parameter list. This must be unique.
+This is what Java uses to determine exactly which method you are trying to call. Once it determines which method it is, then it
+determines if the call is allowed.
+The names of the parameters are not used as part of a method signature. The parameter list is about the types of parameters and
+their order.
+Final methods cannot be overridden in a subclass.
+
+Local variable modifiers
+Only final can be applied to a local variable.
+We don't need to assign a value when a final variable is declared. The rule is only that it must be assigned a value before it can
+be used. We can even use var and final together.
+For reference types, data can be modified. What can't be modified is the object reference.
+
+Instance variable modifiers
+Like methods, instance variables can use access modifiers (private, package, protected and public).
+Optional modifiers: final, volatile (instructs the JVM that the value in this variable may be modified by other threads) and
+transient (this instance variable should not be serialized with the class).
+Final: the variable must be assigned a value when it is declared or when the object is instantiated.
+Final variables do not receive a default value.
+
+Working with Varargs
+Rules:
+1- A method can have at most one varargs parameter.
+2- If a method contains a varargs parameter, it must be the last parameter in the list.
+We can omit the varargs values in the method call, ad Java will create an array of length zero for you.
+It's possible to pass null in varargs parameter.
+
+Private Access
+If two classes were declared in the same file, the private members wouldn't be accessible by other classes because Java prevents
+access outside the class.
+
+Protected Access
+-A member is used without referring to a variable. The rules of package and inheritance are allowed.
+-A member is used through a variable. In this case, the rules for the reference type of the variable are what matter.
+
+Public Access
+Anyone can access the member from anywhere.
+The Java module system redefines "anywhere", and it becomes possible to estrict access to public code outside a module. When given
+code samples, you can assume they are in the same module unless explicitly stated otherwise.
+
+Static
+We can use an instance of the object to call a static method. The compiler checks for the type of the reference and uses that instead
+of the object - which is neaky of Java. There are some code in the project practice.
+A static method cannot call an instance method, but the inverse is true.
+A static variable cannot use an instance variable.
+A static variable is initialized to the default value for that type, as an instance variable.
+Constants use the modifier static final and a different naming convention than other variables (uppercase letters with underscore
+between "words".
+
+Static intializers
+Similar to instance initializers, we add the static keyword and braces to specify they should be run when the class is first loaded.
+All static initializers run when the class is first used and in the order they are defined.
+Try to avoid static and instance initializers. It makes the code much harder to read.
+Use it when you need more than one line to initialize a field and put all the static initialization in the same block.
+
+Static imports
+Static imports are used to import static members of classes, like variables and methods.
+Structure: import static [package].[member];
+The order of the keywords (import static) cannot be inverted.
+We cannot import two members (methods or variables) from different classes with the same name.
+Use it sparingly to not lose the reference from where each static member comes from.
+
+Autoboxing and unboxing variables
+-While Java will implicitly cast a smaller primitive to a larger type, as well as autobox, it will not do both at the same time.
+Long badGorilla = 8; //does not compile
+long ears = Integer.value(9); //compiles without issue
+-We will receive a NPE if we try to unbox a null value.
+
+Overloading Methods
+It occurs when methods in the same class have the same name, but different method signatures, which means they use different
+parameters lists (in number, type and order).
+If the parameter type is related (inheritance), Java will pick the most specific type of a method that it can.
+Even with Java treating varargs as an array, we can only call a method with vararg parameter with stand-alone parameters.
+------------------
+Rule order
+Exact match by type | String glide(int i, int j)
+Larger primitive type | String glide(long i, long j)
+Autoboxed type | String glide(Integer i, Integer j)
+Varargs | String glide(int... nums)
+------------------
+
+REVIEW QUESTIONS
+1- A, B, E
+2- C,
+3- A, D,
+4- A, B, C, E
+5- A, C, D,
+6- A, B, E, F
+7- D, F
+8- D, E
+9- B, C, D, F
+10- B
+11- B
+12- B
+13- C
+14- E
+15- B
+16- E
+17- B
+18- B, D, E
+19- B, C, E
+20- A, E
+21- B, D,

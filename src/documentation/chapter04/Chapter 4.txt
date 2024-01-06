@@ -134,5 +134,26 @@ Daylight Saving Time (horário de verão)
 The act of moving the clock forward or back occurs at 2:00 a.m., which falls every Sunday morning. If the time is going to advance
 1 hour, Java knows that the time between 2:00 a.m. and 2:59 a.m. doesn't exist and it switches over to the appropriate GMT offset.
 
-Review Questions
-1- 
+Review Questions (page 210)
+1- F
+2- C, E, F
+3- A, C, D, F
+4- A, C, D,
+5- C
+6- C
+7- A, D,
+8- A, E, F
+9- A, C, F,
+10- B
+11- E
+12- G
+13- B
+14- A, F
+15- C, E
+16- B, D, C
+17- A, F, G, H
+18- F, C
+19- B,
+20- B, D,
+21- A, C,
+22- E
