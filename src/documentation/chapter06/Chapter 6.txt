@@ -1,0 +1,131 @@
+Class Design - page 275
+
+Understanding inheritance
+A class to be a superclass cannot be marked with final (optional). This way it cannot be extended.
+The inheritance is transitive. Given three classes [X, Y, Z], if X extends Y, and Y extends Z, then X is considered a subclass or
+descendant of Z.
+The list of modifiers we should know for the exam: final, abstract, sealed, non-sealed, static.
+
+Applying class acces modifiers
+We can apply access modifiers to classes.
+We need to have at most one top-level class per file. We don't even need to declare it public.
+Trying to declare a top-level class with protected or private modifier will lead to a compiler error.
+
+Accessing the THIS reference
+The THIS reference refers to the current instance of the class and can be used to access any member of the class, including
+inherited members.
+It cannot be used when there is no implicit instance of the class, such as static method or static initializer block.
+We can use this to access a member from a superclass if the current class doesn't have a member with the same name.
+
+Calling the SUPER reference
+We use the SUPER reference to access members from a superclass.
+
+Declaring constructors
+Constructor parameters can include almost anything, except var.
+The constructor signature is defined by its parameters.
+When Java sees the new keyword, it allocates memory for the new object. It then looks for a constructor with a matching signature
+and calls it.
+If we do not create a constructor, Java creates a default one during compile time.
+We can call other constructors in the class by typing this().
+If we call any constructor of a class using this(), it must be the first statement of the constructor and it must have only one call.
+If we try to call the same constructor we are defining, the compiler is capable of detecting it and it will report this as an error.
+Even doing a cycle call between constructors, the compiler can identify.
+The first statement of every constructor is a call to a parent constructor using super() or another constructor in the class using
+this().
+Java inserts a call to the no-argument constructor super() if we do not explicitly call this() or super().
+The call super() always refers to the most direct parent.
+
+Initializing Objects
+Class initialization order: first we initialize the class, which involves invoking all static members (in the order they appear in
+the class) in the class hierarchy, starting with the highest superclass and working downward, and after this, the static initializers
+are processed in the order they appear in the class. It's referred as class loading and is
+controlled by JVM. The class may be initialized when the program first starts, when a static member of the class is referenced, or
+shortly before an instance of the class is created. It just happens once for each class.
+The default value are assigned only to non-final fields. To final fields, value must be assigned exactly once (in the line in which
+they are declared, in the instance initializer or in the constructor). It's possible to assign null to a final field.
+
+Initializing instances
+Initialize instance of X
+-Initializes class X if it has not been previously initialized;
+-If there is a superclass Y of X, then initialize the instance of Y first;
+-Process all instance variable declarations in the order in which they appear in the class;
+-Process all instance initializers in the order in which they appear in the class;
+-Initialize the constructor, including any overloaded constructors referenced with this().
+To sum it up: variable declarations, initializers and finally constructors.
+
+Inheriting members
+
+Overriding a method
+We override a method when a subclass declares a new implementation of an inherited method with the same signature and compatible
+return type.
+To override a method, the compiler performs the following checks:
+-The method in the child class must have the same signature as the method in the parent class;
+-The method in the child class must be at least as accessible as the method in the parent class;
+-The method in the child class may not declare a checked exception that is new or broader than the class of any exception  declared
+in the parent class;
+-If the method returns a value, it must be the same or a subtype of the method in the parent class, known as covariant return types;
+We can use the @Override annotation to tell the compiler we are attempting to override a method. It can prevent a mistake, because
+it will validate to check if the signature of the overridden method is according to what is expected.
+
+Hiding static methods
+A hidden method occurs when a child class defines a static method with the same name and signature as an inherited static method
+defined in a parent class. The four rules for overriding a method must be followed when a method is hidden. In addition, a new
+fifth rule is added for hiding a method:
+-The method defined in the child class must be marked as static if it is marked as static in the parent class.
+So, if the two methods are marked as static, it's method hiding. If they aren't, it's method overriding. I
+If one of the methods is marked as static and the other is not, the class will not compile.
+
+Hiding variables
+Java doesn't allow variables to be overriden, but they can be hidden, though.
+
+Writing final methods
+By marking a method final, we forbid a class from replacing this method. We cannot hide a static method in a child class nor
+override a method.
+This rule applies only to inherited methods. If the methods were marked as private in the parent class, the method definition in the
+child class would compile.
+
+Creating abstract class
+Abstract class is a class declared with the abstract modifier that cannot be instantiated directly and may contain abstract methods.
+An abstract method is  a method declared with the abstract modifier that does not define a body.
+The abstract modifier can be placed before or after the access modifier in class and method declarations.
+The abstract modifier cannot be placed after the class keyword in a class declaration or after the return type in a method declaration.
+
+Creating Immutable Objects
+An immutable object is one that cannot change state after it is created.
+They simplify code when dealing with concurrency since immutable objects can be easily shared between multiple threads.
+
+Creating an immutable class
+-Mark the class as final or make all of the constructors private;
+-mark all the instance variables private and final;
+-don't define any setter methods;
+-don't allow referenced mutable objects to be modified;
+-Use a constructor to set all properties of the object, making a copy if needed;
+----------------------
+
+REVIEW QUESTIONS
+1- E, F
+2- A, B, F
+3- B, C,
+4- F
+5- E,
+6- D, E
+7- F
+8- D
+9- B, D, E
+10- A, C, g
+11- C
+12- A
+13- A, G
+14- B, E, F
+15- B
+16- D
+17- C, E, F
+18- D, F, H
+19- E
+20- E
+21- B, G
+22- B
+23- B
+24- C
+25- B, C,
+26- b

@@ -10,5 +10,6 @@ public class TestVariables {
 		}
 		
 		System.out.println("Rest value: " + rest);
+		//rest = 7;
 	}
 }
