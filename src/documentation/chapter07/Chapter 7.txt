@@ -1,0 +1,192 @@
+Beyond Classes - page 345
+
+A Java file must have at most one public top-level type, and it must match the name of the file. A top level type can only be declared
+with public pr package access.
+
+Implementing interfaces
+They contain implicit modifiers that are implicit, inserted by the compiler automatically.
+When defining an interface, abstract is an implicit modifier.
+For a method, public abstract are implicit modifiers.
+For constant, public abstract final are implicit modifiers. Every constant must be declared with a constant value.
+Interface methods without the private modifier are implicitly public.
+
+Interfaces cannot be marked as final for the same reason abstract classes cannot (they must be inherited).
+An interface can extend multiple interfaces.
+
+Inheriting duplicate abstract methods
+Java supports inheriting two abstract methods that have compatible method declarations, and by compatible we mean a method can be
+written that properly overrides both inherited methods (considering covariant types).
+
+Declaring concrete interface methods
+Interfaces support:
+-constant variable
+-abstract method
+-default method (default modifier)
+-static method (static modifier)
+-private method (private modifier)
+-private static method (private static modifier)
+Interfaces do not support package nor protected access (probably backward compatibility).
+
+Writing a default Interface method
+A default method is a method defined in an interface with the default keyword and includes a method body.
+A default method is implicitly public and cannot be marked abstract, final or static.
+If a class inherits two or more default methods with the same method signature, then the class must override the method.
+
+Declaring static interface methods
+Static methods defined in interfaces must have a method body.
+
+Reusing code with private interface methods
+The private interface methods were added primarily to reduce code duplication.
+A private interface method must be marked with the private modifier and include a method body.
+A private static interface method may be called by any method within the interface definition.
+A private interface method may only be called by default and other private non-static methods within the interface definition.
+
+Working with enums
+When working with simple enums, the semicolon at the end of the list is optional. For the complex ones, it is required.
+Enums print the name of the enum when toString() is called.
+They can be compared using == because they are like static final constants. In other words, we can use equals() or == to compare
+enums, since each enum value is initialized only once in the Java Virtual Machine (JVM).
+An enum can't be extended.
+An enum provides a values() method to get an array of all the values.
+Each enum has a corresponding int value, which is the order in which they are declared, and can be accessed through ordinal() method.
+Method name() returns the value used to identify the enum.
+An enum constructor will not compile if it contains a public or protected modifier.
+An enum can have an abstract method, and every enum value is required to implement this method.
+An enum can implement an interface, as this just requires overriding the abstract methods.
+Whether the enum is simple or complex, the list of values always comes first.
+
+Sealing Classes
+A sealed class is a class that restricts which other classes may directly extend it.
+Command: public sealed class Bear permits Kodiak, Panda {}
+
+Sealed Class keywords
+-sealed: indicates that a class or interface may only be extended/implemented by named classes or interfaces.
+-permits: used with sealed keyword to list the classes and interfaces allowed.
+-non-sealed: applied to a class or interface that extends a sealed class, indicating that it can be extended by unspecified classes.
+
+Compiling Sealed Classes
+A sealed class needs to be declared (and compiled) in the same package as its direct subclasses.
+The subclasses must each extend the sealed class.
+
+Specifying the subclass modifier
+Every class that directly extends a sealed class must specify exactly one of the following three modifiers: final, sealed or
+non-sealed.
+The permit clause can be omitted if in a file we have two top-level classes defined inside it. But the extends keyword is still
+required in the subclass, though. For classes in different files, the permits keyword must be declared.
+For nested subclasses, it's recommended omitting the permits keyword.
+
+Sealing interfaces
+The idea here is analogous to sealed classes. But one distinct feature of a sealed interface is that the permits list can apply to a
+class that implements the interface or an interface that extends it.
+Interfaces that extend a sealed interface can only be marked sealed or non-sealed. They cannot be marked final (as they are
+implicitly abstract).
+
+Encapsulating data with Records
+Records are implicitly final. The final modifier is optional but assumed.
+When we create records, the compiler inserts some code for us:
+-a constructor with the parameters in the same order in which they appear in the record declaration;
+-an accessor as the field name, plus a set of parentheses;
+-override a number of methods in Object for us (as equals(), hashcode() and toString()).
+
+We can add our own constructors, but we must declare assignments for every field (called long constructor).
+It's possible to define a compact constructor for records, which is used to process validation and transformation succinctly. It
+takes no parameters and implicitly set all fields (the constructor is declared without parentheses). Example in the study part.
+While compact constructors can modify the constructor parameters, they cannot modify the fields of the record.
+Although we have both the long and the compact forms of record constructors, it is highly recommended you stick with the compact
+form unless you have a good reason not to.
+Compact constructors cannot call directly another constructor.
+It's possible to have overloaded constructor, but they are closely related to the long-form. In this case, the first line of this
+kind of constructor must be an explicit call to another constructor via this(). After the first line, all the fields will already
+be assigned, and the object is immutable.
+And as in classes, we cannot declare two record constructors the call each other infinitely or as a cycle.
+It's not possible to add instance fields outside the record declaration, even if they are private (as it could break immutability).
+Records also do not support instance initializers. All initialization for the fields of a record must happen in a constructor.
+
+Creating nested classes
+A nested class is a class that is defined within another class. A nested class can come in one of four flavors:
+-inner class;
+-static nested class;
+-local class (a class defined within a method body);
+-anonymous class (a special case of local class that does not have a name).
+By convention, the term nested class can be used to refer to all nested types, including nested interfaces, enums, records and
+annotations.
+
+Inner class
+Inner classes have the following properties:
+-Can be declared public, protected, package or private;
+-Can extend a class and implement interfaces;
+-Can be marked abstract or final;
+-Can access members of the outer class, including private members.
+When you compile a class, if the class has an inner class, the compiler creates two files: FirstClass.class and First$Second.class
+
+Static nested class
+Static nested classes have the following properties:
+-Can be instantiated without an instance of the enclosing class;
+-Can't access instance variables  or methods declared in the outer class.
+-The nesting creates a namespace because the enclosing class name must be used to refer to it.
+-It can be marked private or protected;
+-The enclosing class can refer to the fields and methods of the static nested class.
+
+Local class
+It is a class defined within a method, constructor and initializer. These classes have the following properrties:
+-They do not have an access modifier;
+-they can be declared final or abstract;
+-They have access to all fields and methods of the enclosing class (when defined in an instance method);
+-They can access final and effectively final local variables.
+
+Anonymous class
+It is a specialized form of a local class that does not have a name. It is declared and instantiated all in one statement using the
+new keyword, a type name with parentheses and a set of braces {}. These classes must extend an existing class or implement an
+existing interface. They are useful when you have a short implementation that will not be used anywhere else.
+
+Understanding polymorphism
+It is the property of an object to take on many forms. To put it more precisely, a Java object may be accessed using:
+-A reference with the same type as the object;
+-A reference that is a superclass of the object;
+-A reference that defines an interface the object implements or inherits;
+But consider that only the methods and variables available to that reference tye are callable no the object without an explicit cast.
+-The type of object determines which properties exist within the object in memory;
+-The type of the reference to the object determines which methods and variables are accessible to the Java program.
+
+Casting interfaces
+The compiler cannot enforce rules about casting to unrelated types for interfaces, as they support multiple inheritance, which
+limits what the compiler can reason about them. But the compiler can enforce one rule: it does not allow a cast from an interface
+reference to an object reference if the object type cannot possibly implement the interface, such as if the class is marked final.
+
+Overriding vs Hiding members
+Strictly speaking, hiding members is not a form of polymorphism since the methods and variables maintain their individual properties.
+Unlike method overriding, hiding members is very sensitive to the reference type and location where the member is being used.
+Although Java allows you to hide variables and static methods, it is considered an extremely poor coding practice.
+-------------------
+
+REVIEW QUESTIONS
+1- A, B, C, D
+2- A, B
+3- A
+4- B
+5- F
+6- D, E, F
+7- B
+8- A / F
+9- A, E / F
+10- C, D, E
+11- A
+12- A, B, E
+13- G
+14- A, C, D, E,
+15- C, F
+16- C
+17- D, E, F, G
+18- E
+19- G
+20- D, F
+21- A, C, E
+22- C, G, H
+23- C,
+24- E, F
+25- B
+26- G
+27- B, C, D, G
+28- B, C, D,
+29- E
+30- F
