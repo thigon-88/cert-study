@@ -1,0 +1,194 @@
+Lambdas and Functional programming - page 419
+
+Writing simple lambdas
+Functional programming is a way of writing code more declaratively. You specify what you want to do instead of dealing with the state
+of the objects. You focus more on expressions than loops.
+Deferred execution: code is specified now, but will run later.
+Lambdas work with interfaces that have exactly one abstract method.
+Java relies on context when figuring out what lambda expressions mean. Context refers to where and how the lambda is interpreted.
+
+These 2 lines do the exact same thing:
+a -> a.canHop()
+(Animal a) -> { return a.canHop(); }
+
+Java allows to omit braces when we have only a single statement.
+Java also allows you to omit a return statement and semicolon (;) when no braces are used.
+Parenthesis are optional only when there is one parameter and it doesn't have a type declared.
+Lambdas can have more than a parameter.
+We cannot use var to receive the result of a lambda expression because var assumes the type based on the context, as well as Java
+infers information about the lambda from the context. So there's not enough context here.
+
+Coding Functional Interfaces
+A functional interface is an interface that contains a single abstract method.
+
+Adding Object Methods
+All classes inherit certain methods from Object. For the exam, we should knnow the following Object method signatures:
+-public String toString()
+-public boolean equals(Object)
+-public int hashcode()
+If a functional interface includes an abstract method with the same signature as a public method found in Object, those
+methods do not count toward the single abstract method test. As we know, any class that implements the interface will
+inherit from Object, and therefore always implement these methods.
+Extending this rule, we cannot declare an interface method that is not compatible with Object (I.E.: int toString()).
+
+Using Method References
+The lambda expression s -> System.out.println(s) does the same thing that System.out::println, but with less redundancy.
+The :: operator tells Java to call the println() method later.
+Remember that :: is like a lambda, and it is used for deferred execution with a functional interface.
+A method reference and a lambda behave the same way at runtime. You can pretend the compiler turns your method reference
+into lambdas for you.
+There are four formats for method references:
+-static methods;
+-instance methods on a particular object;
+-instance methods on a parameter to be determined at runtime;
+-constructors;
+
+Working with Built-in Functional Interfaces
+Here are some of the interfaces:
+-Supplier<T> (method: get(), return: void);
+-Consumer<T> (method: accept(T), return: void);
+-BiConsumer<T, U> (method: accept(T, U), return: void);
+-Predicate<T> (method: test(T), return: boolean);
+-BiPredicate<T, U> (method: test(T, U), return: boolean);
+-Function<T, R> (method: apply(T), return: R);
+-BiFunction<T, U, R> (method: apply(T, U), return: R);
+-UnaryOperator<T> (method: apply(T), return: T);
+-BinaryOperator<T> (method: apply(T, T), return: T).
+
+Implementing Supplier
+It is used when you want to generate or supply values without taking any input.
+It is often used when constructing new objects.
+
+Implementing Consumer and BiConsumer
+Consumer is used when you want to do something with a parameter, but not return anything. BiConsumer does the same thing, except
+that it takes two parameters.
+Printing is a common use of the Consumer interface.
+
+Implementing Predicate and BiPredicate
+Predicate is often used when filtering or matching. A BiPredicate is just like a Predicate, except that it takes two parameters
+instead of one.
+Predicate returns a boolean primitive and not a Boolean object.
+
+Implementing Function and BiFunction
+A Function is responsible for turning one parameter into a value of a potentially different type and returning it. Similarly, a
+BiFunction is responsible for turning two parameters into a value and returning it.
+
+Implementing UnaryOperator and BinaryOperator
+UnaryOperator and BinaryOperator are special cases of a Function. A UnaryOperator transforms its value into one of the same type.
+UnaryOperator extends Function. A BinaryOperator merges two values into one of the same type. Similarly, BinaryOperator extends
+BiFunction.
+
+Using convenience methods on Functional Interfaces
+Several of the common functional interfaces provide a number of helpful default interface methods. All of these facilitate
+modifying or combining functional interfaces of the same type.
+
+Convenience methods:
+Interface instance | method return type | method name | method parameters
+Consumer | Consumer | andThen() | Consumer (uses the same input)
+Function | Function | andThen() | Function
+Function | Function | compose() | Function (passes the output of one to the input of another)
+Predicate | Predicate | and() | Predicate
+Predicate | Predicate | or() | Predicate
+Predicate | Predicate | negate() | -
+The BiConsumer, BiFunction and BiPredicate interfaces have similar methods available.
+
+Learning the Functional Interfaces for Primitives
+Most of them are for double, int and long types. There is one exception, which is BooleanSupplier.
+
+Functional interfaces for boolean
+BooleanSupplier is a separate type and the only functional interface for boolean.
+Signature: boolean getAsBoolean();
+
+Functional Interfaces for double, int and long
+Functional interface | Return type | single abstract method | # of paramenters
+DoubleSupplier | double | getAsDouble | 0
+IntSupplier
+LongSupplier
+DoubleConsumer | void | accept | 1 (double)
+IntConsumer
+LongConsumer
+DoublePredicate | boolean | test | 1 (double)
+IntPredicate
+LongPredicate
+DoubleFunction<R> | R | apply | 1 (double)
+IntFunction<R>
+LongFunction<R>
+DoubleUnaryOperator | double | applyAsDouble | 1 (double)
+IntUnaryOperator
+LongUnaryOperator
+DoubleBinaryOperator | double | applyAsDouble | 2 (double, double)
+IntBinaryOperator
+LongBinaryOperator
+
+Working with variables in Lambdas
+Variables can appear in three different places with respect to lambdas: the parameter list, local variables declared
+inside the lambda body and the variables referenced from the lambda body.
+
+Primitive-specific functional interfaces
+Functional interface | Return type | Single abstract method | # of parameters
+ToDoubleFunction<T> | double | applyAsDouble | 1 (T)
+ToIntFunction<T>
+ToLongFunction<T>
+ToDoubleBiFunction<T, U> | double | applyAsDouble | 2 (T, U)
+ToIntBiFunction<T, U>
+ToLongBiFunction<T, U>
+DoubleToIntFunction | int | applyAsInt | 1 (double)
+DoubleToLongFunction | long | applyAsLong | 1 (double)
+IntToDoubleFunction | double | applyAsDouble | 1 (int)
+IntToLongFunction | long | applyAsLong | 1 (int)
+LongToDoubleFunction | double | applyAsDouble | 1 (long)
+LongToIntFunction | int | applyAsInt | 1 (long)
+ObjDoubleConsumer<T> | void | accept | 2 (T, double)
+ObjIntConsumer<T>
+ObjLongConsumer<T>
+
+Listing parameters
+Specifying the type of parameters is optional. Still, the exam might ask you to identify the type of the lambda parameter.
+A lambda infers the types from the surrounding context. That means you get to do the same.
+Since lambda parameters are just like method parameters, we can add modifiers to them. Specially, we can add the final modifier
+or an annotation (while this tends to be uncommon in real life, these can appear in passing on the exam).
+We have three formats for specifying parameters within a lambda: without types, with types and with var. The compiler requires
+all parameters in the lambda to use the same format.
+
+Using local variables inside a Lambda Body
+While it is most common for a lambda body to be a single expression, it is legal to define a block. That block can have anything
+that is valid in a normal Java block, including local variable declarations.
+Having a lambda with multiple lines and a return statement is often a clue that you should refactor and put that code in a method.
+The shorter the lambda, the easier it is to read the code.
+
+Replacing variables from the Lambda Body
+Lambda bodies are allowed to reference some variables from the surrounding code. A lambda can access an instance variable, method
+parameter, or local variable under certain conditions. Instance variables (and class variables) are always allowed. The only thing
+lambdas cannot access are variables that are not final or effectively final. If this happens, the compiler error occurs in lambda's
+declaration.
+
+Rules for accessing a variable from a lambda body inside a method
+Instance variable = allowed
+Static variable = allowed
+Local variable = allowed if final or effectively final
+Method parameter = allowed if final or effectively final
+Lambda parameter = allowed
+----------------------------
+
+REVIEW QUESTIONS
+1- A
+2- C
+3- A, C, D,
+4- A, D
+5- A, C, E
+6- A, C,
+7- A
+8- E
+9- A, C, F
+10- C,
+11- B
+12- B
+13- C
+14- B, C, D,
+15- G
+16- C
+17- C,
+18- F, B, G
+19- B, C, F
+20- E,
+21- A, E, F

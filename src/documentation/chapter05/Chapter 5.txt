@@ -29,6 +29,9 @@ We don't need to assign a value when a final variable is declared. The rule is o
 be used. We can even use var and final together.
 For reference types, data can be modified. What can't be modified is the object reference.
 
+Effectively final variables
+An effectively final variable is one that is not modified after it is assigned.
+
 Instance variable modifiers
 Like methods, instance variables can use access modifiers (private, package, protected and public).
 Optional modifiers: final, volatile (instructs the JVM that the value in this variable may be modified by other threads) and
