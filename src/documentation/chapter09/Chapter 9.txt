@@ -1,0 +1,315 @@
+Collections and Generics - page 463
+
+Using Common Collection APIs
+A collection is a group of objects contained in a single object.
+There are 4 main interfaces in the Java Collection Framework: List, Set, Queue, Map.
+Notice that Map doesn't inherit the Collection interface. Maps are treated differently because they need different methods due to
+being key/value pairs.
+
+Using the Diamond Operator
+The Diamond operator (<>) is a shorthand notation that allows you to omit the generic type from the right side of the statement when
+the type can be inferred.
+
+Removing Data
+If you try to remove a match using the method remove(), notice that it only removes one match. If there is duplicated elements in
+the collection, the other matches won't be removed, unless you use the remove() method again.
+
+Clearing the Collection
+The clear() method provides an easy way to discard all elements of the Collection.
+
+Check Contents
+The contains() method checks whether a certain value is in the Collection. It calls equals() on elements of the ArrayList to see
+whether there are any matches.
+
+Removing with conditions
+The removeIf() method removes all elements that match a condition. It uses a Predicate, which takes one parameter and returns a
+boolean.
+
+Iterating
+There's a forEach() method that you can call on a Collection instead of writing a loop. It uses a Consumer that takes a single
+parameter and doesn't return anything.
+
+Determining Equality
+There is a custom implementation of equals() so you can compare two Collections to compare the type and contents. For example,
+ArrayList checks order, while HashSet does not.
+
+-------------
+
+Using the List Interface
+We use a list when we want an ordered collection that can contain duplicate entries.
+
+Comparing List implementations
+The main benefit os an ArrayList is that you can look up any element in constant time. Adding or removing an element is slower than
+accessing an element.
+A LinkedList is special because it implements both List and Deque (subinterface of Queue that allows access at both ends). It has
+All the methods of a List. It also has additional methods to facilitate adding or removing from the beginning and/or end of the list.
+The main benefits of a LinkedList are that you can access, add to, and remove from the beginning and end of the list in constant time.
+The trade-off is that dealing with an arbitrary index takes linear time.
+
+Creating a List with a Factory
+There are a few special methods where you get a List back but don't know the type.
+Method | Description | Can add elements? | Can replace elements? | Can delete elements?
+Arrays.asList(varargs) | Returns fixed size list backed by an array | No | Yes | No
+List.of(varargs) | Returns immutable list | No | No | No
+List.copyOf(collection) | Returns immutable list with copy of original collection's values | No | No | No
+By immutable, we mean the list cannot be changed or modified.
+If we try to do any of these not allowed operations, an exception will be thrown during runtime (UnsupportedOperationException).
+
+Creating a List with a Constructor
+Most Collections have two constructors we need to know for the exam. One is with no parameters and the other receives a collection
+of the same type and makes a copy of it.
+ArrayList has an extra constructor we need to know: the constructor receives an integer, which represents the number of slots of the
+list.
+If we type var list = new ArrayList<>();, this code compiles. But the type of the var is ArrayList<Object>.
+
+Working with List Methods (page 474)
+The methods in the List interface are for working with indexes.
+public E remove (int index) - Removes element at indez and moves the rest toward the front.
+public E set (int index, E e) - Replaces element at index and returns original. Throws IndexOutOFBoundsException if index is invalid.
+public default void replaceAll (UnaryOperator<e> op) - Replaces each element in list with result of operator.
+
+Converting from List to an Array
+Command: list.toArray(); - it defaults to an array of class Object.
+We can create an array of the right size: list.toArray (new String[0]); - The advantage of specifying a size of 0 for the parameter
+is that Java will create a new array of the proper size for the return value. If you like, you can suggest a larger array to be used
+instead. If the List fits in that array, it will be returned. Otherwise, a new array will be created.
+
+Using the Set Interface
+You use a Set when you don't want to allow duplicate entries.
+
+Comparing Set Implementations
+A HashSet store its elements in a hash table, which means the keys are a hash and the values are an Object. This means the HashSet
+uses the hashcode() method of the objects to retrieve them more efficiently. The main benefit is that adding elements and checking
+whether an element is in the set both have constant time. The trade-off is that you lose the order in which you inserted the elements.
+A TreeSet stores its elements in a sorted tree structure. The main beiefit is that the set is always in sorted order. The trade-off
+is that adding and checking whether an element exists takes longer than with a HashSet, specially as the tree grows larger.
+
+Working with Set Methods
+Like a List, you can create an immutable Set in one line or make a copy of an existing one:
+Set<Character> letters = Set.of('z', 'o', 'o');
+Set<Character> copy = Set.copyOf (letters);
+Remember that the hashcode() method is used to know which bucket to look in so that Java doesn't have to look through the whole set
+to find ou whether an object is there.
+To have the sort working in a TreeSet, our class must implement an interface (Comparable or comparator) to be used for sorting.
+
+Using the Queue and Deque Interfaces
+We use a Queue when elements are added and removed in a specific order (similar to a line (FIFO queue)).
+A Deque (double-ended queue) is different from a regular queue in that you can insert and remove elements from both the front (head)
+and back (tail).
+
+Comparing Deque implementations
+LinkedList implements both List and Deque interfaces. The trade-off is that it isn't efficient as a "pure" queue.
+We can use ArrayDeque class if we don't need the List methods.
+
+Working with Queue and Deque methods
+-QUEUE METHODS
+public boolean add (E e); - throws Exception (add to back)
+public boolean offer (E e);
+public E element(); - throws Exception (read from front)
+public E peek();
+public E remove(); - throws Exception (get and remove from front)
+public E poll();
+
+-DEQUE METHODS
+Since Deque supports double-ended queues, it inherits all Queue methods and adds more so that it is clear if we are working with
+the front or back of the queue.
+public void addFirst (E e); - throws Exception (add to front)
+public boolean offerFirst (E e);
+public void addLast (E e); - throws Exception (add to back)
+public boolean offerLast (E e);
+public E getFirst(); - throws Exception (read from front)
+public E peekFirst();
+public E getLast(); - throws Exception (read from back)
+public E peekLast();
+public E removeFirst(); - throws Exception (get and remove from front)
+public E pollFirst();
+public E removeLast(); - throws Exception (get and remove from back)
+public E pollLast();
+
+In addition to FIFO queues, there are LIFO (last-in, first-out) queues, which are commonly referred as stacks. Luckily, we can use
+the same double-ended queue implementations (ArrayDeque).
+
+-DEQUE methods (as a stack)
+public void push (E e); - throws Exception (add to the top/front)
+public E pop(); - throws Exception (remove from the front/top)
+public E peek(); (get first element)
+
+Using the Map interface
+Map.of() - factory method to create a Map. This way is harder to read because you have to keep track of which parameter is which;
+Map.ofEntries() - we pass maps as parameter of this method.
+Map.entry(key, value)
+Map.copyOf() - works just like the List and Set interface copyOf() methods.
+
+Working with Map Methods
+public void clear() - removes all keys and values from map.
+public boolean containsKey(Object key) - returns whether key is in map.
+public boolean containsValue(Object value)
+public Set<Map.Entry<K,V>> entrySet() - returns Set of key/value pairs.
+public void forEach(BiConsumer<K key, V value>) - loops through each key/value pair.
+public V get(Object key) - returns value mapped by key or null if none is mapped.
+public V getOrDefault(Object key, V defaultValue) - returns value mapped by key or default value if none is mapped.
+public boolean isEmpty()
+public Set<K> keySet() - returns set of all keys.
+public V merge(K key, V value, Function(<V, V, V> func)) - sets value if key not set. Runs function if key is set, to determine
+new value. Removes if value is null.
+public V put(K key, V value) - adds or replaces key/value pair. Returns previous value or null.
+public V putIfAbsent(K key, V value) - adds value if key not present and returns null. Otherwise, returns existing value.
+public V remove(Object key) - removes and returns value mapped to key. Returns null if none.
+public V replace(K key, V value) - replaces value for given key if key is set. Returns original value or null if none.
+public void replaceAll(BiFunction<K, V, V> func) - replaces each value with results of function.
+public int size()
+public Collection<V> values() - returns Collection of all values.
+
+Iterating through a Map
+Java has a static interface inside Map called Entry. It provides methods to get the key and value of each pair.
+
+Comparing Collection Types
+The data structures that involve sorting (TreeMap and TreeSet) do not allow null values.
+
+Sorting Data
+Order for numbers is obvious, it's numerical order. For String objects, order is defined according to the Unicode character mapping.
+When working with String, remember that numbers sort before letters, and uppercase letters sort before lower letters.
+We can sort object that we create ourselves. Java provides an interface called Comparable. If our class implements Comparable, it
+can be used in data structures that require comparison. There is also a class called Comparator, which is used to specify that you
+want to use a different order than the object itself provides.
+
+Checking for null
+When writing your own compare methods, you should check the data before comparing it if it is not validated ahead of time.
+
+Keeping compareTo() and equals() consistent
+You are strongly encouraged to make your Comparable classes consistent with equals because not all collection classes behave
+predictably if the compareTo() and equals() methods are not consistent.
+
+Comparing Data with a Comparator
+Comparator is a functional interface since there is only one abstract method to implement. This means we can write the Comparator
+using a lambda expression. Alternatively, we can use a method reference and a helper to specify what we want to sort (I.E.:
+Comparator.comparing(Duck::getWeight);
+
+Comparing multiple fields
+Instead of building the whole logic inside compare() method, now we can use method reference and build the Comparator. This code
+represents logic for a comparison:
+Comparator<Squirrel> c = Comparator.comparing(Squirrel::getSpecies).thenComparingInt(Squirrel::getWeight);
+
+If we want to sort in descending order, we can use .reversed() method in the end of the command.
+
+Helper static methods for building a Comparator:
+comparing(function)
+comparingDouble(function)
+comparingInt(function)
+comparingLong(function)
+naturalOrder() - sort using the specified by the Comparable implementation on object itself.
+reverseOrder() - sort using reverse of order specified by Comparable implementation on object itself.
+
+Methods to chain to a Comparator to further specify its behavior:
+reversed()
+thenComparing(function)
+thenComparingDouble(function)
+thenComparingInt(function)
+thenComparingLong(function)
+
+Sorting and searching
+The Collections.sort() method uses the compareTo() method (from Comparable) to sort it.
+If we try to sort a class that doesn't implement Comparable, the compiler won't let us go forward. We can fix this by passing a
+Comparator to sort().
+We can reverse the content of the sorted list by using Collections.reverse() method.
+The sort() and binarySearch() methods allow us to pass in a Comparator object when we don't want to use the natural order.
+When we pass a Comparator to a binarySearch() method, we are telling that the way of looking for the sorted elements in the list is
+informed in the Comparator object. If it's in a different order than informed, then the answer will be -1, indicating it's not
+defined.
+The method binarySearch() requires a sorted list. It prints the index of the element in the Collection. When the element can't be
+found, then it's returned one less than the negated index of where the requested value would need to be inserted. If the element
+would be inserted at index 1, then negating this gives us -1 and subtracting 1 gives us -2.
+When we use binarySearch() method, the compiler doesn't check that you have implemented Comparable in compile time.
+Of we try to add an element in a TreeSet, as it is a sorted collection, if the class does not implement Comparable, then an exception
+will be thrown (ClassCastException). But just loke searching and sorting, we can tell collections that require sorting that we want
+to use a specific Comparator (I.E.: new TreeSet<>((r1, r2) -> r1.id - r2.id);.
+
+Sorting a List
+While we can call Collections.sort(list), we can also sort directly on the list object with list.sort().
+The sort() method takes a Comparator that provides the sort order.
+
+Working with Generics
+Naming convention for generics: a type parameter can be anything you want. The convention is to use single upper-case letters to
+make it obvious that they aren't real class names. Common letters to use:
+-E for an element;
+-K for a map key;
+-V for a map value;
+-N for a number;
+-T for a generic data type;
+-S, U, V, and so forth for multiple generic types.
+
+Understanding Type Erasure
+After the code compiles, the generics are just Object types. This process of removing the generics syntax from your code is
+referred to as type erasure. This allows your code to be compatible with older versions of Java that do not contain generics.
+The compiler also adds the relevant casts for your code to work with this type of erased class.
+
+Overloading a Generic Method
+We cannot have two methods in a class using generics because type erasure will reduce both sets of arguments to the same input
+(List<Object> and List<Double> will turn to List).
+For the same reason, we cannot overload a generic method fom a parent class.
+
+Returning Generic Types
+When you're working with overridden methods that return generics, the return values must be covariant (the returning type of the
+class or interface declared must be a subtype of the class defined in the parent class). For the return types to be covariant, the
+generic type parameter must match.
+
+Implementing Generic Interfaces
+If we create an interface with a formal type parameter or a generic class, the following concrete class must specify the type of the
+generic.
+The other way is to not use generics at all. It generates a compiler warning about the class or interface being a raw type, but it
+does compile.
+
+What you can't do with Generic Types
+There are some limitations on what you can do with a generic type. Most of the limitations are due to type erasure.
+-Call a constructor;
+-Create an array of that generic type (it's an array of Object values;
+-Call instanceof: at runtime, List<String> and List<Integer> look the same, thanks to type erasure;
+-Use a primitive type as a generic type parameter;
+-Create a static variable as a generic type parameter: this is not allowed because the type is linked to the instance of the class.
+
+Writing Generic Methods
+It's possible to declare type parameters on the method level. This is often useful for static methods, since they aren't part of an
+instance that can declare the type. However, it is also allowed on non-static methods.
+Before the return type, we declare the formal type parameter of <T>.
+We can call a generic method normally, and the compiler will try to figure out which one we want. Alternatively, we can specify the
+type explicitly to make it obvious what the type is. I.E.: Box.<String>ship(args);
+When we have a method declare a generic parameter type, it is independent of the class generic.
+
+Creating a generic Record
+Generics can be used with records. This is convenient. Now we have an immutable, generic record.
+
+Bounding Generic Types
+Generic Types are treated as Objects and, therefore, don't have many methods available. Bounded wildcards (<>) solve this by
+restricting what types can be used in a wildcard.
+A wildcard generic type is an unknown generic type represented with a question mark (?). We can use generic wildcard in three ways:
+-unbounded wildcard (syntax = ?). This could be any type.
+-wildcard with upper bound (syntax = ? extends type). It can be any class that extends the type informed (it is a subclass).
+-wildcard with lower bound (syntax = ? super type). It can be any class that is a superclass of the type informed.
+
+When we work with upper bounds or unbounded wildcards in collection, it becomes logically immutale and therefore cannot be modified.
+Technically, we can remove elements from the list, but not add.
+Upper bounds are like anonymous classes in that they use extends regardless of whether we are working with a class or an interface.
+
+This chapter needs revision!!!
+
+Review Questions
+1- A, E
+2- G
+3- B
+4- B, D, F
+5- F
+6- B, D
+7- B,
+8- A
+9- A, B, D
+10- A, B, D, F
+11- B, E
+12- E
+13- A
+14- A, B, C, F
+15- A, D
+16- A
+17- D
+18- B,
+19- H
+20- B, D, F
