@@ -1,0 +1,322 @@
+Streams - page 531
+
+Returning an Optional
+The use of Optional is ideal when we may not have data to return. It's like a box that might have something in it or be empty.
+An Optional is created using a factory. We can either request an empty Optional or pass a value for the Optional to wrap.
+
+Optional static Methods:
+Method | When Optional is empty | When Optional contains value
+get() | Throws Exception | Returns value
+isPresent(Consumer c) | Does nothing | Calls Consumer with value
+isPresent() | Returns false | Returns true
+orElse(T other) | Returns other parameter | Returns value
+orElseGet(Supplier s) | Returns result of calling Supplier | Returns value
+orElseThrow() | Throws NoSuchElementException | Returns value
+orElseThrow(Supplier s) | Throws exception created by calling Supplier | Returns value
+
+Dealing with an Empty Optional
+When the value isn't present, there are a few choices: we can specify the value directly (orElse(T other)), use a Supplier
+(orElseGet(Supplier s)) and throw an exception (default NoSuchElementException (orElseThrow()) or using a Supplier
+(orElseThrow(Supplier s))).
+We cannot throw an exception using orElseGet(Supplier s) because the variable is an Optional<T> and it expects a return of this type.
+
+Using Streams
+A stream in Java is a sequence of data. A stream pipeline consists of the operations that run on a stream to produce a result.
+With streams, the data isn't generated up front - it's created when needed. This is an example of lazy evaluation, which delays
+execution until necessary.
+
+Intermediate x Terminal Operations
+Scenario | Intermediate | Terminal
+Required part of useful pipeline? | No | Yes
+Can exist multiple times in pipeline? | Yes | No
+Return type is stream type? | Yes | No
+Executed upon method call? | No | Yes
+Stream valid after call? | Yes | No
+
+Creating Stream Sources
+The streams are represented by the Stream<T> interface, defined in the java.util.stream package.
+We can create finite stream using Stream.of(element), where it can be an element or a varargs. We can also create an empty stream
+with the command Stream.empty().
+Java also provides a convenient way of converting a Collection to a stream: list.stream(). And it's just as easy to create parallel
+stream from a list: list.parallelStream(). This way you can write code that uses concurrency before even learning what thread is.
+We can create infinite stream with the command Stream.generate(supplier) or Stream.iterate(seed, unaryOperator).
+
+Reviewing Stream Creation Methods
+Method | Finite or Infinite? | Notes
+Stream.empty() | Finite | Creates Stream with zero elements.
+Stream.of(varargs) | Finite | Creates Stream with elements listed.
+coll.stream() | Finite | Creates Stream from Collection.
+coll.parallelStream() | Finite | Creates Stream from Collection where the stream can run in parallel.
+Stream.generate(supplier) | Infinite | Creates Stream by calling Supplier for each element upon request.
+Stream.iterate(seed, unaryOperator) | Infinite | Creates Stream by using seed for first element and then calling UnaryOperator
+for each subsequent element upon request.
+Stream.iterate(seed, predicate, unaryOperator) | F or I | Creates Stream by using seed for first element and then calling
+UnaryOperator for each subsequent element upon request. Stops if Predicate returns false.
+
+Using Common terminal Operations
+You can perform a terminal without any intermediate operations, but not the other way around. Reductions are a special type of
+terminal operation where all the contents of the stream are combined into a single primitive or Object.
+A stream can only have one terminal operation.
+
+Terminal stream operations
+Method | What happens for infinite streams | Return value | Reduction
+count() | Does not terminate | long | Yes
+min(Comparator) | Does not terminate | Optional<T> | Yes
+max(Comparator) | Does not terminate | Optional<T> | Yes
+findAny() | Terminates | Optional<T> | No
+findFirst() | Terminates | Optional<T> | No
+allMatch() | Sometimes terminates | boolean | No
+anyMatch() | Sometimes terminates | boolean | No
+noneMatch() | Sometimes terminates | boolean | No
+forEach() | Does not terminate | void | No
+reduce() | Does not terminate | Varies | Yes
+collect() | Does not terminate | Varies | Yes
+
+Finding the minimum and maximum
+The min() and max() methods allow you to pass a custom comparator and find the smallest or largest value in a finite stream
+according to that sort order.
+min() and max() hang on an infinite stream because they cannot be sure that a smaller or larger value isn't coming later in the
+stream.
+
+Finding a Value
+The findAny() method commonly returns the first element, although this behavior is not guaranteed. It is more likely to return a
+random element when working with parallel stream.
+The findAny() and findFirst() methods are not reductions because sometimes they return without processing all the elements.
+
+Matching
+The allMatch(), anyMatch(), and noneMatch() methods search a stream and return information about how the stream pertains to the
+predicate. These may or may not terminate for infinite stream. It depends on the data. Like the find methods, they are not
+reductions because they do not necessarily look at all the elements.
+
+Iterating
+As in Java Collections Framework, it is common to iterate over the elements of a stream. As expected, calling forEach() on an
+infinite stream does not terminate. Since there is no return value, it is not a reduction.
+Before you use it, consider if another approach would be better. For example, a loop with an if statement could be written with a
+filter. You will learn about filters in the intermediate operations section.
+Notice that this is the only terminal operation with a return type of void.
+Remember that you can call forEach() directly on a Collection or on a Stream. Don't get confused on the exam when you see both
+approaches.
+While forEach() sounds like a loop, it is really a terminal operator for streams. Streams cannot be used as the source in a for-each
+loop because they don't implement Iterable interface.
+
+Reducing
+The reduce() method combines a stream into a single object. It is a reduction, which means it processes all elements. The three
+method signatures are these:
+public T reduce(T identity, BinaryOperator<T> accumulator);
+public Optional<T> reduce(BinaryOperator<T> accumulator);
+public <U> U reduce(U identity, BiFunction<U, ? super T, U> accumulator, BinaryOperator<U> combiner);
+
+The identity is the initial value of the reduction. The accumulator combines the current result with the current value in the stream.
+With lambdas, we can do the same thing with a stream and reduction.
+The third method signature is used when we are dealing with different types. It allows Java to create intermediate reductions and
+then combine them at the end.
+
+Collecting
+The collect() method is a special type of reduction called mutable reduction. It is more efficient than a regular reduction because
+we use the same mutable object while accumulating. Common mutable objects include StringBuilder and ArrayList. This is a very useful
+method, because it lets us get data out of streams and into another form.
+It's important to know how to implement our own collector and understand how it works, but in practice we tend to use common
+collectors. Rather than making developers keep reimplementing the same ones, Java provides a class with common collectors cleverly
+named Collectors. This approach also makes the code easier to read because it is more expressive.
+Remember if we use Collectors.toSet() or toList(), we have no guarantees as to which implementation of Set or List we'll get. Even
+though in case of Set it is likely to be a HashSet, we shouldn't rely on that.
+
+Using Common Intermediate Operations
+Each intermediate operation is lazily executed. Unlike terminal operations, an intermediate operation produces a stream as its
+result. An intermediate operation can also deal with an infinite stream simply by returning another infinite stream. Since elements
+are produced only as needed, this works fine.
+
+Filtering
+The filter() method returns a Stream with elements that match a given expression. Here is the method signature:
+public Stream<T> filter(Predicate<? super T> predicate);
+
+Removing duplicates
+The distinct() method returns a stream with duplicated values removed. As you might imagine, Java calls equals() to determine
+whether the objects are equivalent. The method signature is as follows:
+public Stream<T> distinct();
+
+Restricting by position
+The limit() and skip() methods can make a Stream smaller, or limit() could make a finite stream out of an infinite stream. The
+method signatures are as shown below:
+public Stream<T> limit(long maxSize);
+public Stream<T> skip(long n);
+
+Mapping
+The map() method creates a one-to-one mapping from the elements in the stream to the elements of the next step in the stream. The
+method signature is as follows:
+public <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+
+It uses the lambda expression to figure out the type passed to that function and the one returned. The return type is the stream
+that is returned.
+
+Using flatMap
+The flatMap() method takes each element in the stream and makes any elements it contains top-level elements in a single stream.
+This is helpful when you want to remove empty elements from a stream or combine a stream of lists. Here's the method signature:
+public <R> Stream<R> flatMap(Function<? super T, ? extend Stream<? extends R>> mapper);
+
+This signature says it returns a Stream of the type that the function contains at a lower level. Don't worry about the signature.
+While flatMap() is good for the general case, there is a more convenient way to concatenate two streams:
+static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b);
+
+Sorting
+The sorted() method returns a stream with the elements sorted. Just like sorting arrays, Java uses natural ordering unless we
+specify a comparator. The method signatures are these:
+public Stream<T> sorted();
+public Stream<T> sorted(Comparator<? super T> comparator);
+
+Taking a Peek
+The peek() method is our final intermediate operation. It is useful for debugging because it allows us to perform a stream operation
+without changing the stream. The method signature is as follows:
+public Stream<T> peek(Consumer<? super T> action);
+
+Even though peek() is intended to perform an operation without changing the result, we can write bad code that can change the data
+structure that is used in the stream.
+
+Working with Primitive Streams
+Java actually includes other stream classes besides Stream that you can use to work with select primitives: int, double, and long.
+Let's take a look at why it is needed.
+An IntStream has many of the same intermediate and terminal methods as a Stream, but includes specialized methods for working with
+numeric data. The primitives streams know how to perform certain common operations automatically.
+
+Creating Primitive Streams
+IntStream: used for the primitives types int, short, byte and char.
+LongStream: used for the primitive type long.
+DoubleStream: used for the primitive type double and float.
+
+Common primitive stream methods
+Method | Primitive stream | Description
+OptionalDouble average() | IntStream, LongStream, DoubleStream | Arithmetic mean of elements
+Stream<T> boxed()
+OptionalInt max()
+OptionalLong max()
+OptionalDouble max()
+OptionalInt min()
+OptionalLong min()
+OptionalDouble min()
+IntStream range(int a, int b) | IntStream | Returns primitive stream from a (inclusive) to b (exclusive)
+LongStream range(long a, long b)
+IntStream rangeClosed(int a, int b) | IntStream | Returns primitive stream from a (inclusive) to b (inclusive)
+LongStream rangeClosed(long a, long b)
+int sum()
+long sum()
+double sum()
+IntSummaryStatistics summaryStatistics() | IntStream | Returns object containing numerous stream statistics such as average, min,
+max, etc.
+LongSummaryStatistics summaryStatistics()
+DoubleSummaryStatistics summaryStatistics()
+
+Some methods for creating a primitive stream are equivalent to how we created the source for a regular Stream. We can create
+the same way empty stream, use the of() factory to create a stream using varargs overload.
+The Random class provides a method to get primitives streams of random numbers directly. For example, ints() generates an infinite
+IntStream of primitives.
+
+Mapping Streams
+Another way to create a primitive stream is by mapping from another stream type. Tables at page 561, 562
+Obviously, they have to be compatible types for this to work. Java requires a mapping function to be provided as a parameter, for
+example:
+Stream<String objStream = Stream.of("penguin", "fish");
+IntStream intStream = objStream.mapToInt(s -> s.length());
+
+Using flatMap()
+We can use this approach on primitive streams as well. It works the same way as on a regular Stream, except the method name is
+different.
+
+Using Optional with Primitive Streams
+In the primitive stream methods table above, some of them return a different Optional. For example, instead of returning
+Optional<Double>, we get OptionalDouble. The difference between these two is that OptionalDouble is for a primitive and
+Optional<Double> is for Double wrapper class.
+Table at page 563.
+
+Summarizing Statistics
+Suppose we have an IntStream and want to return a range. The range is the minimum subtracted from the maximum value. Both min() and
+max() value are terminal operations, which means that they use up the stream when they are run. We can't run two terminal operations
+against the same stream. So we can solve it using summary statistics.
+
+Methods | Description
+getCount() | Returns a long representing the number of values
+getAverage() | Returns a double representing the average. If the stream is empty, returns 0
+getSum() | Returns the sum as a double for DoubleSummaryStream and long for IntSummaryStream and LongSummaryStream
+getMin() | Returns the smallest number (minimum) as a double, int or long, depending on the type of the stream. If the stream is
+empty, returns the largest numeric value based on the type.
+getMax() | Returns the largest number (minimum) as a double, int or long, depending on the type of the stream. If the stream is
+empty, returns the smallest numeric value based on the type.
+
+Linking Streams to the Underlying Data
+Consider a List with two elements. Next line we create a stream from that List. Remember that streams are lazily evaluated. This
+means that the stream isn't created immediately. An object is created that knows where to look for the data when it is needed.
+Next line the List gets a new element. On the following line, the stream pipeline runs. First, it looks at the source and seeing
+three elements.
+
+Chaining Optionals
+A few of the intermediate operations for streams are available for Optional.
+Optional.map() method adds another Optional to the result, while flatMap() removes the unnecessary layer.
+
+Checked Exceptions and Functional Interfaces
+Suppose we have a class with a method that throws a checked exception. If we use it in a stream, the calling method handles or
+declare the exception. But if we use method reference, the lambda to which it expands does not declare an exception. The Supplier
+interface does not allow checked exceptions. If we try it, we will receive a compiler error "unhandled exception type Exception".
+There are two approaches to get around this problem. One is to catch the exception and turn it into an unchecked exception.
+Another alternative is to create a wrapper method with try/catch.
+
+Using a Spliterator
+A Spliterator provides good level of control over processing. It starts with a Collection or a Stream. You call trySplit() to split
+some content. The rest stays in the original Spliterator object.
+The characteristics of a Spliterator depend on the underlying data source. A Collection data source is a basic Spliterator. By
+contrast, when using a Stream data source, the Spliterator can be parallel or even infinite. The Stream itself is executed lazily
+rather than when the Spliterator is created.
+
+Spliterator methods (page 569):
+Spliterator<T> trySplit();
+void forEachRemaining(Consumer<T> c);
+boolean tryAdvance(Consumer<T> c);
+
+When dealing with infinite streams, the Spliterator recognizes it and doesn't attempt to give you half. Instead, we can process
+each element we want by calling tryAdvance(). It would be a bad idea to call forEachRemaining() on an infinite stream.
+Note that Spliterator can have a number of characteristics, such as CONCURRENT, ORDERED, SIZED, SORTED.
+
+Collecting Results
+There are many predefined collectors that are available via static methods on the Collectors class.
+
+Collecting into Maps
+Code using Collectors involving maps can get quite long. When creating a map, you need to specify two functions. The first one tells
+the collector how to create the key. The second one tells the collector how to create the value.
+(I.E.: Collectors.toMap(s -> s, String::length)
+To learn how to deal with new return types, instead of HashMap, and how to deal with registers with the same key, look at page 574.
+
+Grouping, Partitioning and Mapping
+The groupingBy() collector tells collect() that it should group all the elements of the stream into a Map. The function determines
+the keys in the Map. Each value in the Map is a List of all entries that match that key.
+Partitioning is a special case of grouping. With partitioning, there are only two possible groups: true and false Partitioning is
+like splitting a list into two parts. Unlike groupingBy(), we cannot change the type of Map that is returned. However, there are
+only two keys in the map, so does it really matter which Map type we use?
+A mapping() collector lets us go down a level and add another collector. It takes two parameters: the function for the value and
+how to group it further.
+
+Teeing Collectors
+We know it's problematic when we want to return two things with streams because you only get one pass. Luckily, you can use
+teeing() to return multiple values of your own. This way, we can combine the results into a single object we want to return.
+
+------------------
+
+Review Questions
+1- A
+2- F
+3- F
+4- A, B,
+5- D, F
+6- A, B, C,
+7- A,
+8- A, D, E
+9- B, D
+10- C, F
+11- B
+12- B, C,
+13- F
+14- B
+15- B, D, E
+16- E
+17- C
+18- G
+19- B
+20- D, E
+21- F
