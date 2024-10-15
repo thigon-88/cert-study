@@ -1,0 +1,304 @@
+Exceptions and Localization - page 591
+
+Understanding Exceptions
+An exception is Java's way of saying: "I give up. I don't know what to do right now. You deal with it."
+
+Understanding exception types
+Java has a Throwable class for all objects that represent an exception. Not all of them have the word exception in their class name,
+which can be confusing.
+
+Checked exceptions
+A checked exception is an exception that must be declared or handled by the application code where it is thrown. In Java, checked
+exceptions all inherit Exception, but not RuntimeException. Checked exceptions tend to be more anticipated - for example, trying
+to read a file that doesn't exist.
+Checked exceptions also include any class that inherits Throwable but not Error or RuntimeException, such as a class that directly
+extends Throwable.
+The exceptions that can be thrown within a method are either wrapped in compatible try and catch blocks or declared in the method
+signature.
+
+Unchecked exceptions
+An unchecked exception is any exception that does not need to be declared or handled by the application code where it is thrown.
+They are often called runtime exceptions, although in Java, unchecked exceptions include any class that inherits RuntimeException or
+Error.
+
+Error and Throwable
+Error means something went so horribly wrong that your program should not attempt to recover from it.
+Throwable is the parent of all exceptions, including the Error class. While we can handle Throwable and Error exceptions, it is not
+recommended you do so in your application code.
+
+Printing an Exception
+There are three ways to print an exception. You can let Java print it out, print just the message, or print where the stack trace
+comes from.
+
+Recognizing Exception classes
+We need to recognize three groups of exception classes for the exam: RuntimeException, checked Exception and Error, we need to know
+if it's thrown by the Java Virtual Machine (JVM) or by a programmer, and which are inherited from another one.
+
+RuntimeException classes
+RuntimeException and its subclasses are unchecked exceptions that don't have to be handled or declared. They can be thrown by the
+programmer or the JVM.
+Table page 601
+NumberFormatException is a subclass of IllegalArgumentException.
+In Java 17, the JVM tells you the object reference that triggered the NullPointerException. This feature is called Helpful
+NullPointerExceptions. If we compile the code with the -g:vars flag, debug info will be added. So, instead of having <parameter1> in
+the exception message, we will have the parameter name.
+To enable this feature via command-line argument: java -XX:+ShowCodeDetailsInExceptionMessages Frog
+To disable this feature via command-line argument: java -XX:-ShowCodeDetailsInExceptionMessages Frog
+
+Checked Exception classes
+Checked Exceptions have Exception in their hierarchy but not RuntimeException. They must be handled or declared.
+Table page 605.
+FileNotFoundException and NotSerializableException are subclasses of IOException.
+
+Error classes
+Error are unchecked exceptions that extend Error class. They are thrown by the JVM and should not be handled or declared. Errors are
+rare, but you might see the ones listed in table 11.4 (page 605).
+The code if often unable to recover from them.
+
+Handling Exceptions
+Using try and catch statements - page 606
+The curly braces are required for try and catch blocks.
+We need something after try statement to deal with thrown exceptions. Without this, the code does not compile.
+
+Chaining catch blocks
+It's not possible for both catch blocks to be executed when chained together.
+A rule for the order of the catch blocks: Java looks at them in the order they appear. If it is impossible for one of the catch blocks
+to be executed, a compiler error about unreachable code occurs. For example, this happens then a superclass catch block appears
+before a subclass catch block.
+
+Applying a multi-catch block
+A multi-catch block allows multiple exception types to be caught by the same catch block. We use the | operator between exception
+classes in catch statement.
+The exceptions can be listed in any order within the catch clause and the variable name appears at the end.
+The multi-catch block is intended to be used for exceptions that aren't related, and Java prevents you from specifying redundant
+types in a multi-catch.
+
+Adding a finally block
+The try statement also lets you run code at the end with a finally clause, regardless of whether an exception is thrown.
+The finally clause is always executed, be it with or without catch clause. But with a catch clause, the finally one runs after it.
+The catch block is optional when finally is used.
+There is one exception to "the finally block will always be executed" rule: Java defines a method that you call as System.exit().
+It takes an integer parameter that represents the status code that is returned. This method tells Java to end the program immediately.
+In this case, the finally block does not run.
+
+Automating Resource Management
+Often, our application works with files, databases, and various connection objects. Commonly, these external data sources are
+referred to as resources. In many cases, we open a connection to the resource, whether if it's over the network or within a file
+system. We then read/write the data we want and finally, we close the resource to indicate that we are done with it.
+
+Introducing Try-with-resources
+To avoid resource leak by forgetting to close a resource or throwing an exception by closing a closed resource, Java includes the
+try-with-resource statement, to automatically close all resources opened in a try clause. This feature is known as automatic
+resource management, because Java automatically takes care of the closing.
+Even though we have an implicit finally block created and used by the compiler, we can still create a finally block when using a
+try-with-resources statement. We just need to be aware that the implicit one will be called first.
+
+Basics of Try-with-resources
+When multiple resources are opened, they are closed in the reverse of the order in which they were created. Also, notice that
+parentheses are used to list those resources, and semicolons (;) are used to separate the declarations).
+A catch block is optional with a try-with-resources statement.
+A try-with-resources statement differs from a try statement in that neither catch nor finally blocks are required, although a
+developer may add both.
+
+Constructing Try-with-resources statements
+Only classes that implement AutoCloseable interface can be used in a try-with-resources statement. We will find further in this
+book resources that implement Closeable. Since Closeable extends AutoCloseable, they are supported in try-with-resources statements.
+The only difference between the two is that Closeable's close() method declares IOException, while AutoCloseable's close() method
+declares Exception.
+
+Declaring Resources
+While try-with-resources does support declaring multiple variables, each variable must be declared in a separate statement. Each
+resource must include the data type and be separated by a semicolon (;).
+We can declare a resource using var as data type in a try-with-resources statement, since resources are local variables.
+
+Scopes of Try-with-resources
+The resources created in the try clause are in scope only within the try block. This means that the implicit finally runs before any
+catch/finally block that we code ourselves.
+
+Applying Effectively final
+It is possible to declare the resources ahead of time, provided they are marked final or effectively final, instead of creating
+them in try-with-resources statement. The syntax uses the resource name in place of the resource declaration, separated by a
+semicolon (;).
+
+Understanding Suppressed Exceptions
+If the try block throws an exception, when multiple exceptions are thrown, all but the first are called suppressed exceptions.
+The idea is that Java treats the first exception as the primary one and tacks on any that come up while automatically closing.
+When a primary exception is thrown, the try clause ends, and Java automatically calls the close() method. Considering close()
+method throws an exception, it is added as a suppressed one. We can iterate through any suppressed exceptions by using
+e.getSuppressed(), where e is the first exception caught.
+Java remembers the suppressed exceptions that go with a primary exception even if we don't handle them in the code.
+If more than two resources throw an exception, the first one to be thrown becomes the primary exception, and the rest are grouped
+as suppressed exceptions. And since resources are closed in the reverse of the order in which they are declared, the primary
+exception will be on the last declared resource that throws an exception.
+Keep in mind that suppressed exceptions apply only to exceptions thrown in the try clause.
+
+Formatting Values
+
+Formatting Numbers
+We introduce the NumberFormat interface for finer-grained control. It has two commonly used methods:
+public final String format (double number)
+public final String format (long number)
+
+Since NumberFormat is an interface, we need the concrete DecimalFormat class to use it. It includes a constructor that takes a
+pattern String:
+public DecimalFormat(String pattern);
+
+Two formatting characters commonly used:
+# - omit position if no digit exists for it.
+0 - put 0 in position if no digit exists for it.
+
+Formatting Dates and Times
+Java provides a class called DateTimeFormatter to display standard formats (ISO_LOCAL_DATE, ISO_LOCAL_TIME and ISO_LOCAL_DATE_TIME).
+We can format date and time calling the method format() in any of these objects (LocalDate, LocalTime or LocalDateTime).
+The DateTimeFormatter will throw and exception if it encounters an incompatible type (I.E.: try to format LocalDate informing
+DateTimeFormatter.ISO_LOCAL_TIME).
+
+Customizing the Date/Time Format
+If you don't want to use one of the predefined formats, DateTimeFormatter supports a custom format using a date format String.
+DateTimeFormatter.ofPattern("MMMM dd, yyyy 'at' hh:mm");
+If you see on the exam the older Java Date classes being used (SimpleDateFormat) instead of the more useful (DateTimeFormatter),
+just know that the custom formats that are likely to appear on the exam will be compatible with both.
+
+Common Date/Time symbols
+Symbols | Meaning | Examples
+y | Year | 22, 2022
+M | Month | 1, 01, Jan, January
+d | Day | 5, 05
+h | Hour | 9, 09
+m | Minute | 45
+S | Second | 52
+a | a.m./p.m. | AM, PM
+z | Time zone name | Eastern Standard Time, EST
+Z | Time zone offset | -0400
+
+If we use the time zone for a LocalDateTime object, an exception will be thrown because it does not have a time zone specified. If
+ZonedDateTime were used instead, the code would complete successfully.
+Table with supported date/time symbols: page 628
+
+Selecting a format() method
+The date/time classes contain a format() method that will take a formatter, while the formatter classes contain a format() method
+that will take a date/time value. The result is that both are acceptable.
+
+Adding Custom Text Values
+If we want to add custom text values, Java has a simple solution. We can escape the text by surrounding it with a pair of single
+quotes ('). Escaping text instruct the formatter to ignore the values inside the single quotes and just insert them as part of the
+final value.
+If we don't escape the text values with single quotes, an exception will be thrown at runtime if the text cannot be interpreted as a
+date/time symbol.
+
+-------------
+Supporting Internationalization and Localization
+
+Picking a Locale
+A Locale is defined as a specific geographical, political or cultural region, but we'll only see languages and countries on the
+exam.
+To find the user's current locale: Locale.getDefault();
+Locale (language): fr (lowercase language code).
+Locale (language, country): en_US (lowercase language code and Uppercase country code. The country is optional.
+We can set the default locale. But keep in mind that after this, we'll not receive our current locale, but the one we set while the
+program is running.
+
+Localizing Numbers
+Formatting or parsing currency and number values can change depending on your locale.
+The first step to formatting or parsing data is the same: obtain an instance of a NumberFormat. Table page 633 shows the available
+factory methods.
+Once you have the NumberFormat instance, you can call format() to turn a number into a String, or you can use parse() to turn a
+String into a number.
+Note: in the real world, use int or BigDecimal for money and not double. Doing math on amounts with double is dangerous because the
+values are stored as floating-point numbers. Your boss won't appreciate it if you lose pennies or fractions of pennies during
+transactions.
+
+Parsing Numbers
+The parse() method, found in various types, declares a checked exception ParseException that must be handled or declared in the
+method in which it is called.
+
+Formatting with CompactNumberFormat
+CompactNumberFormat is similar to DecimalFormat, but it is designed to be used in places where print space may be limited.
+If we don't specify a style, SHORT is used by default.
+In general, this formatter will truncate the value being formatted. Depending on the value, it can also be rounded up.
+How it works:
+-First it determines the highest range for the number, such as thousand (K), million (M), billion (B), trillion (T).
+-it then returns up to the first three digits of that range, rounding the last digit if needed.
+-Finally, it prints an identifier. If SHORT is used, a symbol is returned. If LONG is used, a space followed by a word is used.
+
+Localizing Dates
+Factory methods to get a DateTimeFormatter
+DateTimeFormatter.ofLocalizedDate(FormatStyle dateStyle) - for formatting dates
+DateTimeFormatter.ofLocalizedTime(FormatStyle timeStyle) - for formatting times
+DateTimeFormatter.ofLocalizedDateTime(FormatStyle dateTimeStyle) - for formatting dates and times
+Each method takes a FormatStyle parameter (or two) with possible values SHORT, MEDIUM, LONG and FULL. For the exam, we are not
+required to know the format of each of these styles.
+
+Specifying a Locale Category
+If we want to have a finer-grained control of the default locale, Java subdivides the underlying formatting options into distinct
+categories with the Locale.Category enum. It is a nested element in Locale that supports distinct locales for displaying and
+formatting data. For the exam, we should be familiar with the following elements:
+-DISPLAY: used for displaying data about locale.
+-FORMAT: used for formatting dates, numbers and currencies.
+When we call Locale.setDefault() with a locale, the DISPLAY and FORMAT are set together.
+
+Loading Properties with Resource Bundle
+A resource bundle contains the locale-specific objects to be used by a program. It is like a map with keys and values. The resource
+bundle is commonly stored in a properties file. A properties file is a text file in a specific format with key/value pairs.
+
+Creating a Resource Bundle
+When creating resource bundles, the filenames must match the name of the resource bundle. They are then followed by an underscore
+(_), target locale, and .properties file extension.
+We don't need to know where the resources bundles are stored. But just to know, the bundles can be stored in a variety of places.
+Even though they can be stored inside the JAR that uses them, doing so is not recommended. This approach forces you to rebuild the
+application JAR any time some text changes. One of the benefits of using resource bundles is to decouple the application code from
+the locale-specific text data.
+
+Picking a Resource BUndle
+There are two methods for obtaining a resource bundle that you should be familiar with for the exam.
+ResourceBundle.getBundle("name");
+ResourceBundle.getBundle("name", locale);
+The first uses the default locale. If it's not found, throw MissingResourceException.
+
+Learn these steps to know about how to pick a resource bundle:
+-Look for the resource bundle for the requested locale, followed by the one for the default locale.
+-For each locale, check the language/country, followed by just the language.
+-Use the default resource bundle if no matching locale can be found.
+
+Formatting Messages
+In real programs, it is common to substitute variables in the middle of a resource bundle string. The convention is to use a number
+inside braces such as {0}, {1}, etc. The number indicates the order in which the parameters will be passed. Although resource
+bundles don't support this directly, the MessageFormat class does.
+The first parameter to format() is the message and the second one is a vararg, allowing us to specify any number of input values.
+
+Using the Properties class
+When working with the ResourceBundle class, you may also come across the Properties class. It functions like a HashMap class, except
+that it uses String values for the keys and values.
+If we try to get a value with a key not passed to the Properties class, it will return null. Instead of letting return null, we can
+inform a default value in case the key is not found.
+The Properties class also includes a get() method, but only getProperty() allows for a default value.
+
+--------------------------
+
+Review Questions
+1- A, D,
+2- A,
+3- A, D, E
+4- E
+5- C, F
+6- D
+7- D
+8- C
+9- D
+10- A
+11- B, E, F
+12- B, C,
+13- A, B,
+14- B
+15- C, D, F
+16- F
+17- D, F
+18- C
+19- D
+20- G
+21- C, E
+22- B
+23- A, E
+24- B
+25- A
+26- A, B, C, F
